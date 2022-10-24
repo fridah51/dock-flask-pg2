@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Admin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/datatables.min.css">
+  <link rel="stylesheet" href="/static/css/boot 5/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/font-awesome4.7.0.min.css">
+  <script src="/static/js/jquery-3.5.1.min.js"></script>
+  <script src="/static/js/boot 5/bootstrap.min.js"></script>
+  <style> 
+    .navbar {
+      margin-bottom: 30px;
+      border-radius: 0;
+      background-color: black;
+     
+    }
+    body{
+      margin-bottom: 50px;
+      
+    }
+   
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+  <!-- Navbar content -->
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">IMS System</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link " href="/">Home</a>
+        </li>
+        
+      </ul>
+      <span  class="navbar-nav justify-content-end">
+        {% if not current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/signup"><span class="glyphicon glyphicon-log-in"></span> Sign Up</a></li>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+
+</nav>
+
+
+<!-- Button trigger modal -->
+<div class="container">
+
+  <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Create
+  </button>
+    
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Create new user</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/create_user" method="post" > 
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input name="username" type="text" class="form-control" id="username"  placeholder="Enter username">
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input name="email" type="text" class="form-control" id="email"  placeholder="Enter email">
+              </div>
+              <div class="form-group">
+                <label for="Password1">Password</label>
+                <input name="password" type="password" class="form-control" id="Password1" placeholder="Password">
+              </div>
+              <div class="form-group">
+                <label for="username">Role</label>
+                <select class="form-select" name="role" aria-label=".form-select-lg example" style="width:100%">
+                  <option selected>Choose a role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Employee">Employee</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <h4>Users</h4>
+     <!--The .table-bordered class adds borders to a table -->
+    <p> </p>          
+    <table class="table table-bordered" id = 'table1'>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Password</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in myUsers %}
+        <tr>
+          <td>{{record.id}}</td>
+          <td>{{record.email}}</td>
+          <td>{{record.username}}</td>
+          <td>{{record.role}}</td>
+          <td>{{record.password}}</td>
+          <td>
+            <button type="button" class="delete btn-dark" data-bs-toggle="modal" data-bs-target="#deleteModal{{record.id}}">
+              <img src = "/static/images/delete-24.svg" alt="delete"/>
+            </button>
+    
+              <!-- Modal -->
+              <div class="modal fade" id="deleteModal{{record.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="deleteModalLabel">Delete User</h4>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/delete_user" method="post">
+                        <div class="form-group">
+                        <label >User id:</label>
+                        <input name='user_id' type="name" class="form-control" value="{{record.id}}"  >
+                        </div>
+                        <div class="form-group">
+                        <p>Do you want to delete this user permanently? </p>
+                        </div>
+                        <input type="submit"  class="submit" value="Yes">
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+  
+
+<script src="/static/js/datatables.min.js"></script>
+    
+<script>
+    $(document).ready( function () {
+    $('#table1').DataTable();
+    } );
+</script>
+  
+  
+
+
+</body>
+</html>

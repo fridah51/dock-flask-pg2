@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/datatables.min.css">
+    <link rel="stylesheet" href="/static/css/boot 5/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome4.7.0.min.css">
+    <script src="/static/js/jquery-3.5.1.min.js"></script>
+    <script src="/static/js/boot 5/bootstrap.min.js"></script>
+</head>
+<body>
+
+        
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+    <!-- Navbar content -->
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">IMS System</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link " href="/">Home</a>
+          </li>
+          {% if current_user.is_authenticated %}    
+            {% if  current_user.role == 'Employee' %}
+              <li class="nav-item">
+                <a class="nav-link" href="/makeorder">Make Sale</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/inventory">Inventory</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/stock">Stock</a>
+              </li>
+            {% elif current_user.role == 'Admin' %}
+            <li class="nav-item">
+              <li class="nav-item">
+                  <a class="nav-link " href="/makeorder">Make Sale</a>
+              </li>
+                  <a class="nav-link " href="/dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/sales">Sales</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/inventory">Inventory</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/stock">Stock</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/delivery">Deliveries</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/orders">Orders</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link active"  aria-current="page" href="/payments">Payments</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/admin">Admin</a>
+              </li>
+  
+            {% endif %}
+          {% endif %}
+        </ul>
+        <span  class="navbar-nav justify-content-end">
+          {% if not current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/signup"><span class="glyphicon glyphicon-log-in"></span> Sign Up</a></li>
+          {% endif %}
+          {% if current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="/logout"><span class="glyphicon glyphicon-log-in"></span> Log Out</a></li>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  
+</nav>
+
+
+<div class="container">
+  <h4>Payments </h4>
+  <table class="table table-hover table-bordered" id="table1">
+      
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">ORDER_ID</th>
+          <th scope="col">AMOUNT</th>
+          <th scope="col">DATE</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in payments %}
+        <tr>
+          <td>{{i.id}}</td>
+          <td>{{i.order_id}}</td>
+          <td>{{i.amount}}</td>
+          <td>{{ i.created_at }} </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    
+  </table>
+
+</div>
+
+
+
+<script src="/static/js/datatables.min.js"></script>
+   
+<script>
+  $(document).ready( function () {
+  $('#table1').DataTable();
+  } );
+</script>
+
+
+
+</body>
+</html>
